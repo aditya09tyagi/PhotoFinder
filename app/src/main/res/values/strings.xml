@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">PhotoFinder</string>
+
+    <!-- Placeholders -->
+    <string name="icon">Icon</string>
+    <string name="button">Button</string>
+    <string name="separator">Separator</string>
+    <string name="placeholder">Placeholder</string>
+    <string name="image">Image</string>
+    <string name="retry">RETRY</string>
+
+    <!-- EXTRAS -->
+    <string name="no_internet">No internet connection</string>
+    <string name="search_hint">Type here to search</string>
+    <string name="close">Close</string>
+    <string name="loading_more">Loading More</string>
+    <string name="no_images">No Images</string>
+
+    <!-- Toast -->
+    <string name="ok">OK</string>
+    <string name="generic_error">Some Error Occurred</string>
+
+    <!--Error-->
+    <string name="cancelled">Cancelled</string>
+
+</resources>

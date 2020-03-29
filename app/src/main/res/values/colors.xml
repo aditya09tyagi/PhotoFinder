@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3378E1</color>
+    <color name="colorPrimaryNew">#0E313A</color>
+    <color name="colorPrimaryDark">#124F9E</color>
+    <color name="colorAccent">@color/colorPrimary</color>
+
+    <!-- Text Colors -->
+    <color name="color_text_primary">@color/black</color>
+    <color name="color_text_secondary">#80000000</color>
+    <color name="color_text_disabled">#66ffffff</color>
+
+    <!-- SOLID COLORS -->
+    <color name="transparent">#00ffffff</color>
+    <color name="black">#000000</color>
+    <color name="semi_transparent_black">#40000000</color>
+    <color name="white">#ffffff</color>
+    <color name="off_white">#F7F7F7</color>
+    <color name="separator">#1A000000</color>
+    <color name="grey">#9E9D9D</color>
+    <color name="dark_grey">#6D6767</color>
+    <color name="light_grey">#dddddd</color>
+    <color name="shimmer_placeholders">#dddddd</color>
+    <color name="translucent_white">#46FFFFFF</color>
+    <color name="navigation_bar">#33FFFFFF</color>
+    <color name="text_red">#952D2D</color>
+    <color name="feedback_positive">#208020</color>
+
+</resources>
