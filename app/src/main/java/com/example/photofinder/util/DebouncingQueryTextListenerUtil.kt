@@ -1,11 +1,11 @@
 package com.example.photofinder.util
 
-import android.widget.SearchView
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 import kotlinx.coroutines.*
 
 class DebouncingQueryTextListenerUtil(
     private val onDebouncingQueryTextChange: (String?) -> Unit
-) : SearchView.OnQueryTextListener {
+) : MaterialSearchView.OnQueryTextListener {
     private var debouncePeriod: Long = 1000
 
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
@@ -13,6 +13,9 @@ class DebouncingQueryTextListenerUtil(
     private var searchJob: Job? = null
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+        query?.let{
+            onDebouncingQueryTextChange(it)
+        }
         return false
     }
 

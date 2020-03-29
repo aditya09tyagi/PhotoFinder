@@ -114,6 +114,9 @@ dependencies {
     //shared preferences manager for androidx and kotlin
     implementation "androidx.preference:preference-ktx:1.1.0"
 
+    //Search View
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+
     //Pagination
     implementation 'ru.alexbykov:nopaginate:0.9.9'
 

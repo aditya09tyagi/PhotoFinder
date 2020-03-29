@@ -21,7 +21,7 @@ class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun setItem(photo: Photo, picasso: Picasso) {
         val url = createImageUrl(photo.farm, photo.server, photo.id, photo.secret)
         picasso.load(url)
-            .placeholder(R.drawable.progress_animation)
+            .placeholder(R.drawable.placeholder_image)
             .error(R.drawable.ic_error)
             .into(itemView.ivPicHolder)
 

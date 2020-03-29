@@ -10,6 +10,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@string/image"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         android:src="@drawable/bg_image_placeholder"
         tools:src="@tools:sample/backgrounds/scenic"
         android:layout_width="200dp"

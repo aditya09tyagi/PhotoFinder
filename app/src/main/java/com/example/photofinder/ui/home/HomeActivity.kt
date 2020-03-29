@@ -3,14 +3,13 @@ package com.example.photofinder.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.ImageView
-import android.widget.SearchView
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.photofinder.R
 import com.example.photofinder.data.models.Status
 import com.example.photofinder.ui.base.BaseActivity
@@ -19,14 +18,14 @@ import com.example.photofinder.ui.loader.CustomErrorListItemCreator
 import com.example.photofinder.ui.loader.CustomLoadingListItemCreator
 import com.example.photofinder.ui.widget.photo_view_layout.StfalconImageViewer
 import com.example.photofinder.util.DebouncingQueryTextListenerUtil
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.shimmer_placeholder.*
-import kotlinx.coroutines.*
 import ru.alexbykov.nopaginate.callback.OnLoadMoreListener
 import ru.alexbykov.nopaginate.paginate.NoPaginate
-import timber.log.Timber
 import javax.inject.Inject
+
 
 class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMoreListener {
 
@@ -40,7 +39,7 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var layoutManager: GridLayoutManager
+    private lateinit var layoutManager: StaggeredGridLayoutManager
     private lateinit var paginate: NoPaginate
     private var isFirstLoad = true
     private lateinit var searchText: String
@@ -55,6 +54,7 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        setSupportActionBar(toolbar)
         initialiseObjects()
         initialiseLayout()
         setListener()
@@ -66,7 +66,7 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
     }
 
     private fun initialiseLayout() {
-        layoutManager = GridLayoutManager(this, EXTRA_SPAN_COUNT)
+        layoutManager = StaggeredGridLayoutManager(EXTRA_SPAN_COUNT, RecyclerView.VERTICAL)
         rvImages.layoutManager = layoutManager
         rvImages.addItemDecoration(GridSpacingItemDecoration(2, 20, true))
         rvImages.adapter = imageAdapter
@@ -77,6 +77,14 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
             .setCustomErrorItem(CustomErrorListItemCreator(false))
             .setCustomLoadingItem(CustomLoadingListItemCreator(false))
             .build()
+
+        searchBar.setAnimationDuration(500)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        searchBar.setMenuItem(menu?.findItem(R.id.action_search))
+        return true
     }
 
     private fun setListener() {
@@ -84,7 +92,6 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
             DebouncingQueryTextListenerUtil { newText ->
                 newText?.let { text ->
                     if (text.isEmpty()) {
-                        showErrorToast("No text passed")
                         searchText = ""
                         isFirstLoad = true
                     } else {
@@ -99,14 +106,6 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
                 }
             }
         )
-        searchBar.setOnSearchClickListener {
-            if (::searchText.isInitialized) {
-                if (searchText.isNotBlank())
-                    homeViewModel.getImageBySearch(searchText)
-                else
-                    imageAdapter.clearList()
-            }
-        }
 
         imageAdapter.setOnItemClickListener(this)
 
@@ -130,7 +129,6 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
             when (it.status) {
                 Status.LOADING -> {
                     ivNoImages.visibility = View.GONE
-                    progressBar.visibility = View.VISIBLE
                     updateLoadingState(true)
                     updateErrorState(false)
                     if (isFirstLoad) {
@@ -140,7 +138,6 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
                     }
                 }
                 Status.SUCCESS -> {
-                    progressBar.visibility = View.VISIBLE
                     ivNoImages.visibility = View.GONE
                     updateLoadingState(false)
                     updateErrorState(false)
@@ -181,7 +178,6 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
                     updateErrorState(true)
                     updateLoadingState(false)
                     shimmerViewContainer.visibility = View.GONE
-                    progressBar.visibility = View.VISIBLE
                     ivNoImages.visibility = View.VISIBLE
                     rvImages.visibility = View.GONE
                     it.message?.let { errorMsg ->
@@ -251,10 +247,17 @@ class HomeActivity : BaseActivity(), ImageAdapter.OnItemClickListener, OnLoadMor
     }
 
     override fun onLoadMore() {
-        if (::searchText.isInitialized){
+        if (::searchText.isInitialized) {
             if (searchText.isNotEmpty())
                 homeViewModel.getImageBySearch(searchText, ++currentPage)
         }
     }
 
+    override fun onBackPressed() {
+        if (searchBar.isSearchOpen) {
+            searchBar.closeSearch()
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
